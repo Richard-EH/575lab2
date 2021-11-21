@@ -37,14 +37,32 @@ countyData = "/d3-lab/data/VA_County_Amend.json"
 window.onload = setMap();
 
 function setMap(){
+// Dimensions for those who don't know
+    var width = 960;
+    var height = 460;
+
+    var map = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
     d3.queue()
         .defer(d3.csv, "data/Local_Covid.csv")
         .defer(d3.json, "data/VA_County_Amend.json")
         .await(callback);
+    // no idea what this does anymore I'm simply attempting to get something to work with this god forsaken lib.
     function callback( error, csvData, countyData){
         console.log(error);
         console.log(csvData);
         console.log(countyData);
+
+    var counties = map.selectAll(".counties")
+        .data (countyData)
+        .enter()
+        .append("path")
+        .attr("class", function(d){
+            return "counties" + d.properties.FIPS;
+        })
+        .attr("d",path);
     };
 };
