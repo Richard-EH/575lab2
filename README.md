@@ -1,2 +1,2 @@
 # 575lab2
-D3 is complete garbage and I refuse to change my opinion on this matter. Not only that but our current course has mostly unusable code blocks and as someone with barely any knowledge of Javascript its pretty much impossible for me to be able to complete this lab. I have attempted to collaborate with others but! Queue.js has depreceated, Topojson.js has also depreciated. I am currently exhausted at trying to figure out how the hell d3 works. I've had nothing but failure after failure just trying to get a damn json to load and nobody can tell me what it won't. 
+I currently have nothing to add here because I am unable to get my code to work. Should I be able to get it to work i nthe future then I will update this here. 
