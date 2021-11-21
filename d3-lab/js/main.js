@@ -31,17 +31,20 @@
 // };
 
 // Loads when the window is done. 
-// window.onload = setMap();
+csvData = "/d3-lab/data/Local_Covid.csv"
+countyData = "/d3-lab/data/VA_County_Amend.json"
 
-// function setMap(){
+window.onload = setMap();
 
-//     d3.queue()
-//         .defer(d3.csv, "data/Local_Covid.csv")
-//         .defer(d3.json, "data/VA_County_Amend.json")
-//         .await(callback);
-//     function callback( error, csvData, countyData){
-//         console.log(error);
-//         console.log(csvData);
-//         console.log(countyData);
-//     };
+function setMap(){
 
+    d3.queue()
+        .defer(d3.csv, "data/Local_Covid.csv")
+        .defer(d3.json, "data/VA_County_Amend.json")
+        .await(callback);
+    function callback( error, csvData, countyData){
+        console.log(error);
+        console.log(csvData);
+        console.log(countyData);
+    };
+};
