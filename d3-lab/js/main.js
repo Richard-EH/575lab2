@@ -1,34 +1,34 @@
-let files = ["data/Local_Covid.csv", "data/VA_County_Amend.topojson"]
-let promises = [];
-let countyData = null;
-let attributeData = null;
-let expressed = "Population"
-let attributeDataArray = [];
+// let files = ["data/Local_Covid.csv", "data/VA_County_Amend.topojson"]
+// let promises = [];
+// let countyData = null;
+// let attributeData = null;
+// let expressed = "Population"
+// let attributeDataArray = [];
 
-// begin script attempt
-window.onload = function()
-{
-    files.forEach(function(url){
-        promises.push(d3.json(url))
-    });
+// // begin script attempt
+// window.onload = function()
+// {
+//     files.forEach(function(url){
+//         promises.push(d3.json(url))
+//     });
 
-    Promise.all(promises).then(function(values){
-        values.forEach(element => {
-            if (element.arcs != undefined)
-            {
-                element = topojson.feature(element, element.objects["NAME"])
-                countyData = element;
-            }
-            else {
-                attributeData = element;
-            }
-            console.log(element)
-        });
+//     Promise.all(promises).then(function(values){
+//         values.forEach(element => {
+//             if (element.arcs != undefined && element.arcs.length == 100)
+//             {
+//                 element = topojson.feature(element, element.objects["NAME"])
+//                 countyData = element;
+//             }
+//             else {
+//                 attributeData = element;
+//             }
+//             console.log(element)
+//         });
 
-        joinData(attributeData, countyData.features);
-        loadMap (countyData, attributeData, expressed);
-    })
-};
+//         joinData(attributeData, countyData.features);
+//         loadMap (countyData, attributeData, expressed);
+//     })
+// };
 
 // Loads when the window is done. 
 // window.onload = setMap();
