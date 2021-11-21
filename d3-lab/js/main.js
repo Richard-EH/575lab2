@@ -31,8 +31,8 @@
 // };
 
 // Loads when the window is done. 
-csvData = "/d3-lab/data/Local_Covid.csv"
-countyData = "/d3-lab/data/VA_County_Amend.json"
+// csvData = "/d3-lab/data/Local_Covid.csv"
+// countyData = "/d3-lab/data/VA_County_Amend.json"
 
 window.onload = setMap();
 
