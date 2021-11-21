@@ -47,8 +47,8 @@ function setMap(){
         .attr("height", height);
 
     d3.queue()
-        .defer(d3.csv, "data/Local_Covid.csv")
-        .defer(d3.json, "data/VA_County_Amend.json")
+        .defer(d3.csv, "/d3-lab/data/Local_Covid.csv")
+        .defer(d3.json, "/d3-lab/data/VA_County_Amend.topojson")
         .await(callback);
     // no idea what this does anymore I'm simply attempting to get something to work with this god forsaken lib.
     function callback( error, csvData, countyData){
