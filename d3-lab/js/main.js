@@ -17,7 +17,7 @@ function setMap(){
         .await(callback);
     // Callback Function to run after the d3.queue
     function callback( error, csvData, countyData){
-        // Only error has any data...everything is returned as undefined and I have no idea how to fix this.
+        // Only error has any data...everything else is returned as undefined and I have no idea how to fix this. Error only returns the first row of the csv. 
         console.log(error);
         console.log(csvData);
         console.log(countyData);
