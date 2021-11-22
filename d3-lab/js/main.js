@@ -1,3 +1,7 @@
+
+(function ()
+{
+
 //loads when window loads
 window.onload = setMap();
 
@@ -24,8 +28,22 @@ function setMap(){
 //graticule
         setGraticule(map, path);
         // topo conversion
-        var vaCounty = (topojson.feature(county, county.objects.VA_County_Amend).features)};
+        var vaCounty = (topojson.feature(county, county.objects.VA_County_Amend).features)
 
+        //data join for County Data and CSV
         vaCounty = joinData(vaCounty, csvData);
 
-};
+        //create the color scale
+        var colorScale = makeColorScaleNatural(csvData);
+        
+        //add enumeration units to the map
+        setEnumerationUnits(franceRegions, map, path, colorScale);
+        
+        //add coordinated visualization to the map
+        setChart(csvData, colorScale);
+
+    }
+}; // End of setmap so far. 
+
+
+})
