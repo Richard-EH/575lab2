@@ -1,4 +1,4 @@
-//(function(){
+
 //variables 
 var attrArray = ["Single_Family_Homes_Built", "Population", "Covid_Hospitalisations", "Covid_Death_Total", "Covid_Cases_Total"];
 var expressed = attrArray[0];
@@ -19,10 +19,10 @@ function setMap(){
         .attr("height", height);//this code at least works.
 
     var projection = d3.geoAlbers()
-        .center([-0.36, 24.36])
+        .center([-2.18, 33.6])
         .rotate([81, -13.64, 0])
         .parallels([29.5, 45.5])
-        .scale(5000.00)
+        .scale(1000.00)
         .translate([width/2, height/2]);
 
     var path = d3.geoPath()
@@ -40,7 +40,7 @@ function setMap(){
 //graticule
         setGraticule(map, path);
         // topo conversion
-        var vaCounty = (topojson.feature(countyData, countyData.objects.VA_County_Amend).features)
+        var vaCounty = (topojson.feature(countyData, countyData.objects.VA_County_Amend).features);
 
         //data join for County Data and CSV
         vaCounty = joinData(vaCounty, csvData);
@@ -49,7 +49,7 @@ function setMap(){
         var colorScale = makeColorScaleNatural(csvData);
         
         //add enumeration units to the map
-        setEnumerationUnits(franceRegions, map, path, colorScale);
+        setEnumerationUnits(countyData, map, path, colorScale);
         
         //add coordinated visualization to the map
         setChart(csvData, colorScale);
@@ -139,5 +139,136 @@ function makeColorScaleNatural(data){
 
     return colorScale;
 };
+function choropleth(props, colorScale){
+    //make sure attribute value is a number
+    var val = parseFloat(props[expressed]);
+    //if attribute value exists, assign a color; otherwise assign gray
+    if (typeof val == 'number' && !isNaN(val)){
+        return colorScale(val);
+    } else {
+        return "#CCC";
+    };
+};
 
-//})
+
+function setEnumerationUnits(countyData, map, path, colorScale){
+    //...REGIONS BLOCK FROM MODULE 8
+	//add France regions to map
+	var regions = map.selectAll(".regions")
+		.data(countyData)
+		.enter()
+		.append("path")
+		.attr("class", function(d){
+			return "regions " + d.properties.FIPS;
+		})
+		.attr("d", path)
+		.style("fill", function(d){
+            return choropleth(d.properties, colorScale);
+        });
+};
+
+function setChart(csvData, colorScale){
+    //chart frame dimensions
+    var chartWidth = window.innerWidth * 0.425,
+        chartHeight = 473,
+        leftPadding = 25,
+        rightPadding = 2,
+        topBottomPadding = 5,
+        chartInnerWidth = chartWidth - leftPadding - rightPadding,
+        chartInnerHeight = chartHeight - topBottomPadding * 2,
+        translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+
+    //create a second svg element to hold the bar chart
+    var chart = d3.select("body")
+        .append("svg")
+        .attr("width", chartWidth)
+        .attr("height", chartHeight)
+        .attr("class", "chart");
+
+    //create a rectangle for chart background fill
+    var chartBackground = chart.append("rect")
+        .attr("class", "chartBackground")
+        .attr("width", chartInnerWidth)
+        .attr("height", chartInnerHeight)
+        .attr("transform", translate);
+
+    //create a scale to size bars proportionally to frame
+    var csvmax = d3.max(csvData, function(d) { return parseFloat(d[expressed]); });
+    console.log(csvmax);
+    var yScale = d3.scaleLinear()
+        .range([chartHeight - 10, 0])
+        .domain([0, csvmax + 20]);
+
+    //set bars for each province
+    var bars = chart.selectAll(".bar")
+        .data(csvData)
+        .enter()
+        .append("rect")
+        .sort(function(a, b){
+            return b[expressed]-a[expressed]
+        })
+        .attr("class", function(d){
+            return "bar " + d.adm1_code;
+        })
+        .attr("width", chartInnerWidth / csvData.length - 1)
+        .attr("x", function(d, i){
+            return i * (chartInnerWidth / csvData.length) + leftPadding;
+        })
+        .attr("height", function(d, i){
+            return chartHeight - 10 - yScale(parseFloat(d[expressed]));
+        })
+        .attr("y", function(d, i){
+            return yScale(parseFloat(d[expressed])) + topBottomPadding;
+        })
+        .style("fill", function(d){
+            return choropleth(d, colorScale);
+        });
+
+    // //annotate bars with attribute value text
+    // var numbers = chart.selectAll(".numbers")
+    //     .data(csvData)
+    //     .enter()
+    //     .append("text")
+    //     .sort(function(a, b){
+    //         return a[expressed]-b[expressed]
+    //     })
+    //     .attr("class", function(d){
+    //         return "numbers " + d.adm1_code;
+    //     })
+    //     .attr("text-anchor", "middle")
+    //     .attr("x", function(d, i){
+    //         var fraction = chartWidth / csvData.length;
+    //         return i * fraction + (fraction - 1) / 2;
+    //     })
+    //     .attr("y", function(d){
+    //         return chartHeight - yScale(parseFloat(d[expressed])) + 15;
+    //     })
+    //     .text(function(d){
+    //         return d[expressed];
+    //     });
+
+    //create a text element for the chart title
+    var chartTitle = chart.append("text")
+        .attr("x", 150)
+        .attr("y", 30)
+        .attr("class", "chartTitle")
+        .text("Number of Variable " + expressed[0] + " in each region");
+
+    //create vertical axis generator
+    var yAxis = d3.axisLeft()
+        .scale(yScale);
+
+    //place axis
+    var axis = chart.append("g")
+        .attr("class", "axis")
+        .attr("transform", translate)
+        .call(yAxis);
+
+    //create frame for chart border
+    var chartFrame = chart.append("rect")
+        .attr("class", "chartFrame")
+        .attr("width", chartInnerWidth)
+        .attr("height", chartInnerHeight)
+        .attr("transform", translate);
+
+};
