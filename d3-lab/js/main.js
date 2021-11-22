@@ -7,7 +7,7 @@ window.onload = setMap();
 
 function setMap(){
 // Dimensions for those who don't know
-    var width = window.innerWidth * 0.5;
+    var width = 960;
     var height = 460;
 // creation of the SVG area
     var map = d3.select("body")
