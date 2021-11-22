@@ -1,6 +1,8 @@
 
-(function ()
-{
+//variables 
+var attrArray = ["Single_Family_Homes_Built", "Population", "Covid_Hospitalisations", "Covid_Death_Total", "Covid_Cases_Total"];
+var expressed = attrArray[0];
+
 
 //loads when window loads
 window.onload = setMap();
@@ -45,5 +47,3 @@ function setMap(){
     }
 }; // End of setmap so far. 
 
-
-})
