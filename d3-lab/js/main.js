@@ -10,12 +10,12 @@ function setMap(){
         .append("svg")
         .attr("width", width)
         .attr("height", height);//this code at least works.
-
+//queue block however I have been unable to get this to load data properly. 
     d3.queue()
         .defer(d3.csv, "/d3-lab/data/Local_Covid.csv")
         .defer(d3.json, "/d3-lab/data/VA_County_Amend.topojson")
         .await(callback);
-    // No idea what this does anymore I'm simply attempting to get something to work with this god forsaken lib.
+    // Callback Function to run after the d3.queue
     function callback( error, csvData, countyData){
         // Only error has any data...everything is returned as undefined and I have no idea how to fix this.
         console.log(error);
