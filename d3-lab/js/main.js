@@ -152,14 +152,13 @@ function choropleth(props, colorScale){
 
 
 function setEnumerationUnits(countyData, map, path, colorScale){
-    //...REGIONS BLOCK FROM MODULE 8
-	//add France regions to map
+	//add counties to map
 	var regions = map.selectAll(".regions")
 		.data(countyData)
 		.enter()
 		.append("path")
 		.attr("class", function(d){
-			return "regions " + d.properties.FIPS;
+			return "regions " + d.properties.NAME;
 		})
 		.attr("d", path)
 		.style("fill", function(d){
