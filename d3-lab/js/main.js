@@ -18,6 +18,13 @@ function setMap(){
         .attr("width", width)
         .attr("height", height);//this code at least works.
 
+    var projection = d3.geoAlbers()
+        .parallels([36 + 46/ 60, 37 + 58 /60])
+        .rotate([120 + 50 / 60, 0]); 
+
+    var path = d3.geoPath()
+        .projection(projection);
+
 	//use Promise.all to parallelize asynchronous data loading
 	var promises = [];
 	promises.push(d3.csv("/d3-lab/data/Local_Covid.csv")); //load attributes from csv
@@ -30,7 +37,7 @@ function setMap(){
 //graticule
         setGraticule(map, path);
         // topo conversion
-        var vaCounty = (topojson.feature(county, county.objects.VA_County_Amend).features)
+        var vaCounty = (topojson.feature(countyData, countyData.objects.VA_County_Amend).features)
 
         //data join for County Data and CSV
         vaCounty = joinData(vaCounty, csvData);
@@ -47,3 +54,21 @@ function setMap(){
     }
 }; // End of setmap so far. 
 
+function setGraticule(map, path){
+
+    var graticule = d3.geoGraticule()
+        .step([5,5]);
+    	//create graticule background
+	var gratBackground = map.append("path")
+    .datum(graticule.outline()) //bind graticule background
+    .attr("class", "gratBackground") //assign class for styling
+    .attr("d", path) //project graticule
+
+//create graticule lines	
+    var gratLines = map.selectAll(".gratLines") //select graticule elements that will be created
+        .data(graticule.lines()) //bind graticule lines to each element to be created
+        .enter() //create an element for each datum
+        .append("path") //append each element to the svg as a path element
+        .attr("class", "gratLines") //assign class for styling
+        .attr("d", path); //project graticule lines
+};
