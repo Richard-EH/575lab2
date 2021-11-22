@@ -1,4 +1,4 @@
-
+//(function(){
 //variables 
 var attrArray = ["Single_Family_Homes_Built", "Population", "Covid_Hospitalisations", "Covid_Death_Total", "Covid_Cases_Total"];
 var expressed = attrArray[0];
@@ -19,8 +19,11 @@ function setMap(){
         .attr("height", height);//this code at least works.
 
     var projection = d3.geoAlbers()
-        .parallels([36 + 46/ 60, 37 + 58 /60])
-        .rotate([120 + 50 / 60, 0]); 
+        .center([-0.36, 24.36])
+        .rotate([81, -13.64, 0])
+        .parallels([29.5, 45.5])
+        .scale(5000.00)
+        .translate([width/2, height/2]);
 
     var path = d3.geoPath()
         .projection(projection);
@@ -72,3 +75,34 @@ function setGraticule(map, path){
         .attr("class", "gratLines") //assign class for styling
         .attr("d", path); //project graticule lines
 };
+
+function joinData(countyData, csvData){
+    for (var i=0; i<csvData.length; i++){
+        var csvCovid = csvData[i]; //the current region
+        var csvKey = csvCovid.FIPS; //the CSV primary key
+
+                //loop through geojson regions to find correct region
+                for (var a=0; a<countyData.length; a++){
+
+                    var geojsonProps = countyData[a].properties; //the current region geojson properties
+                    var geojsonKey = geojsonProps.STCOFIPS; //the geojson primary key
+        
+                    //where primary keys match, transfer csv data to geojson properties object
+                    if (geojsonKey == csvKey){
+        
+                        //assign all attributes and values
+                        attrArray.forEach(function(attr){
+                            var val = parseFloat(csvCovid[attr]); //get csv attribute value
+                            geojsonProps[attr] = val; //assign attribute and value to geojson properties
+                        });
+                    };
+                };
+            };
+        
+            console.log(countyData);
+        
+            return countyData;
+};
+
+
+//})
