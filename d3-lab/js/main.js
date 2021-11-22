@@ -19,7 +19,7 @@ function setMap(){
         .attr("height", height);//this code at least works.
 
     var projection = d3.geoAlbers()
-        .center([-2.18, 33.6])
+        .center([-2.18, 32.69])
         .rotate([81, -13.64, 0])
         .parallels([29.5, 45.5])
         .scale(1000.00)
@@ -35,7 +35,6 @@ function setMap(){
 	Promise.all(promises).then(callback);
     // Callback Function to run after the promise code block
     function callback(data){
-        // Only error has any data...everything else is returned as undefined and I have no idea how to fix this. Error only returns the first row of the csv. 
         [csvData,countyData] = data;
 //graticule
         setGraticule(map, path);
@@ -124,11 +123,11 @@ function makeColorScaleNatural(data){
     };
 
     //cluster data using ckmeans clustering algorithm to create natural breaks
-    var clusters = ss.ckmeans(domainArray, 5);
-    //reset domain array to cluster minimums
-    domainArray = clusters.map(function(d){
-        return d3.min(d);
-    });
+    // var clusters = ss.ckmeans(domainArray, 5);
+    // //reset domain array to cluster minimums
+    // domainArray = clusters.map(function(d){
+    //     return d3.min(d);
+    // });
     //remove first value from domain array to create class breakpoints
     //console.log(domainArray);
     domainArray.shift();
