@@ -1,6 +1,7 @@
 /* Stylesheet by RHelsley */
 body{
     font-family: sans-serif;
+	background-color:rgb(161, 148, 197)
 }
 h1 {
    text-align: center;
@@ -25,15 +26,16 @@ h1 {
 .map {
 	border: 3px solid #999;
 	margin: 10px 0 0 20px;
+	background-color:rgb(253, 253, 253)
 }
 
-.countries {
+/* .countries {
 	fill: #FFF;
 	stroke: #CCC;
 	stroke-width: 2px;
-}
+} */
 
-.regions {
+.counties {
 	stroke: #000;
 	stroke-width: 0.5px;
 	stroke-linecap: round;
@@ -60,7 +62,7 @@ h1 {
 }
 
 .chartBackground {
-	fill: rgba(226, 217, 217, 0.2);
+	fill: rgba(241, 241, 241, 0.2);
 }
 
 .chartFrame {

@@ -61,7 +61,7 @@ function setMap(){
         vaCounty = joinData(vaCounty, csvData);
 
         //create the color scale
-        var colorScale = makeColorScaleNatural(csvData);
+        var colorScale = makeColorScale(csvData);
         
         //add enumeration units to the map
         setEnumerationUnits(countyData, map, path, colorScale);
@@ -77,7 +77,7 @@ function setMap(){
 
 
 
-    }
+    };
 }; // End of setmap so far. 
 
 function setGraticule(map, path){
@@ -126,7 +126,7 @@ function joinData(countyData, csvData){
         
             return countyData;
 };
-function makeColorScaleNatural(data){
+function makeColorScale(data){
     var colorClasses = [
         "#D4B9DA",
         "#C994C7",
@@ -146,19 +146,21 @@ function makeColorScaleNatural(data){
         domainArray.push(val);
     };
 
+    //console.log(domainArray);
+
     //cluster data using ckmeans clustering algorithm to create natural breaks
     var clusters = ss.ckmeans(domainArray, 5);
     //reset domain array to cluster minimums
     domainArray = clusters.map(function(d){
         return d3.min(d);
     });
-    //remove first value from domain array to create class breakpoints
-    //console.log(domainArray);
+    //Same as below, code is correct via code examples provided however the array continues to return NaN
+    console.log(domainArray);
     domainArray.shift();
 
-    //assign array of last 4 cluster minimums as domain
+    //
     colorScale.domain(domainArray);
-	console.log(domainArray);
+	//console.log(domainArray);
 
     return colorScale;
 };
@@ -176,7 +178,7 @@ function choropleth(props, colorScale){
 
 function setEnumerationUnits(countyData, map, path, colorScale){
 	//add counties to map
-	var counties = map.selectAll(".county")
+	var counties = map.selectAll(".counties")
 		.data(countyData)
 		.enter()
 		.append("path")
@@ -221,8 +223,8 @@ function setChart(csvData, colorScale){
         .range([chartHeight - 10, 0])
         .domain([0, csvmax + 20]);
 
-    //set bars for each province
-    var bars = chart.selectAll(".bar")
+    //set bars for each county
+    var bars = chart.selectAll(".bars")
         .data(csvData)
         .enter()
         .append("rect")
@@ -230,7 +232,7 @@ function setChart(csvData, colorScale){
             return b[expressed]-a[expressed]
         })
         .attr("class", function(d){
-            return "bar " + d.FIPS;
+            return "bars" + d.FIPS;
         })
         .attr("width", chartInnerWidth / csvData.length - 1)
         .attr("x", function(d, i){
@@ -301,10 +303,10 @@ function changeAttribute(attribute, csvData){
     expressed = attribute;
 
     //recreate the color scale
-    var colorScale = makeColorScaleNatural(csvData);
+    var colorScale = makeColorScale(csvData);
 
     //recolor enumeration units
-    var counties = d3.selectAll(".county")
+    var countyVA = d3.selectAll(".countyVA")
         .transition()
         .duration(1000)
         .style("fill", function(d){
@@ -316,6 +318,11 @@ function changeAttribute(attribute, csvData){
         .sort(function(a, b){
             return b[expressed] - a[expressed];
         })
+        .transition()//animation
+        .delay(function(d,i){
+            return i * 20
+        })
+        .duration(500)
         .attr("x", function(d, i){
             return i * (chartInnerWidth / csvData.length) + leftPadding;
         })
@@ -332,7 +339,7 @@ function changeAttribute(attribute, csvData){
         });
     };
 //function to position, size, and color bars in chart
-function updateChart(bars, n, colorScale){
+function updateChart(bars,  csvData, colorScale){
     //position bars
     bars.attr("x", function(d, i){
             return i * (chartInnerWidth / n) + leftPadding;
