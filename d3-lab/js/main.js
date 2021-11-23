@@ -70,7 +70,10 @@ function setMap(){
         setChart(csvData, colorScale);
 
         //drop down menu
-        createDropdown(attrArray)
+        createDropdown(attrArray);
+
+        //updatechart
+        //updateChart(bars, n, colorScale);
 
 
 
@@ -155,7 +158,7 @@ function makeColorScaleNatural(data){
 
     //assign array of last 4 cluster minimums as domain
     colorScale.domain(domainArray);
-	//console.log(domainArray);
+	console.log(domainArray);
 
     return colorScale;
 };
@@ -213,7 +216,7 @@ function setChart(csvData, colorScale){
 
     //create a scale to size bars proportionally to frame
     var csvmax = d3.max(csvData, function(d) { return parseFloat(d[expressed]); });
-    //console.log(csvmax);
+        console.log(csvmax);
     var yScale = d3.scaleLinear()
         .range([chartHeight - 10, 0])
         .domain([0, csvmax + 20]);
@@ -327,7 +330,7 @@ function changeAttribute(attribute, csvData){
         .style("fill", function(d){
             return choropleth(d, colorScale);
         });
-
+    };
 //function to position, size, and color bars in chart
 function updateChart(bars, n, colorScale){
     //position bars
@@ -384,49 +387,49 @@ function dehighlight(props){
         return styleObject[styleName];
     };
 };
+// ALL LABEL CODE BLOCK OUT UNTIL CHART CAN BE CORRECTED
+// //function to create dynamic label
+// function setLabel(props){
+//     //label content
+//     var labelAttribute = "<h1>" + props[expressed] +
+//         "</h1><b>" + expressed + "</b>";
 
-//function to create dynamic label
-function setLabel(props){
-    //label content
-    var labelAttribute = "<h1>" + props[expressed] +
-        "</h1><b>" + expressed + "</b>";
+//     //create info label div
+//     var infolabel = d3.select("body")
+//         .append("div")
+//         .attr("class", "infolabel")
+//         .attr("id", props.FIPS + "_label")
+//         .html(labelAttribute);
 
-    //create info label div
-    var infolabel = d3.select("body")
-        .append("div")
-        .attr("class", "infolabel")
-        .attr("id", props.FIPS + "_label")
-        .html(labelAttribute);
+//     var countyName = infolabel.append("div")
+//         .attr("class", "labelname")
+//         .html(props.NAME);
+// };
 
-    var countyName = infolabel.append("div")
-        .attr("class", "labelname")
-        .html(props.NAME);
-};
+// //function to move info label with mouse
+// //Example 2.8 line 1...function to move info label with mouse
+// function moveLabel(){
+//     //get width of label
+//     var labelWidth = d3.select(".infolabel")
+//         .node()
+//         .getBoundingClientRect()
+//         .width;
 
-//function to move info label with mouse
-//Example 2.8 line 1...function to move info label with mouse
-function moveLabel(){
-    //get width of label
-    var labelWidth = d3.select(".infolabel")
-        .node()
-        .getBoundingClientRect()
-        .width;
+//     //use coordinates of mousemove event to set label coordinates
+//     var x1 = d3.event.clientX + 10,
+//         y1 = d3.event.clientY - 75,
+//         x2 = d3.event.clientX - labelWidth - 10,
+//         y2 = d3.event.clientY + 25;
 
-    //use coordinates of mousemove event to set label coordinates
-    var x1 = d3.event.clientX + 10,
-        y1 = d3.event.clientY - 75,
-        x2 = d3.event.clientX - labelWidth - 10,
-        y2 = d3.event.clientY + 25;
+//     //horizontal label coordinate, testing for overflow
+//     var x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1; 
+//     //vertical label coordinate, testing for overflow
+//     var y = d3.event.clientY < 75 ? y2 : y1; 
 
-    //horizontal label coordinate, testing for overflow
-    var x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2 : x1; 
-    //vertical label coordinate, testing for overflow
-    var y = d3.event.clientY < 75 ? y2 : y1; 
+//     d3.select(".infolabel")
+//         .style("left", x + "px")
+//         .style("top", y + "px");
+// };
 
-    d3.select(".infolabel")
-        .style("left", x + "px")
-        .style("top", y + "px");
-};
 
-};
 
