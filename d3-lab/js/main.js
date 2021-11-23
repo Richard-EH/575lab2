@@ -4,6 +4,22 @@ var attrArray = ["Single_Family_Homes_Built", "Population", "Covid_Hospitalisati
 var expressed = attrArray[0];
 
 
+//chart frame dimensions
+var chartWidth = window.innerWidth * 0.425,
+    chartHeight = 473,
+    leftPadding = 25,
+    rightPadding = 2,
+    topBottomPadding = 5,
+    chartInnerWidth = chartWidth - leftPadding - rightPadding,
+    chartInnerHeight = chartHeight - topBottomPadding * 2,
+    translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+
+//create a scale to size bars proportionally to frame and for axis
+var yScale = d3.scaleLinear()
+    .range([463, 0])
+    .domain([0, 110]);
+
+
 //loads when window loads
 window.onload = setMap();
 
@@ -22,7 +38,7 @@ function setMap(){
         .center([-2.18, 32.69])
         .rotate([81, -13.64, 0])
         .parallels([29.5, 45.5])
-        .scale(5000.00)
+        .scale(1000.00)
         .translate([width/2, height/2]);
 
     var path = d3.geoPath()
@@ -126,11 +142,11 @@ function makeColorScaleNatural(data){
     };
 
     //cluster data using ckmeans clustering algorithm to create natural breaks
-    // var clusters = ss.ckmeans(domainArray, 5);
-    // //reset domain array to cluster minimums
-    // domainArray = clusters.map(function(d){
-    //     return d3.min(d);
-    // });
+    var clusters = ss.ckmeans(domainArray, 5);
+    //reset domain array to cluster minimums
+    domainArray = clusters.map(function(d){
+        return d3.min(d);
+    });
     //remove first value from domain array to create class breakpoints
     //console.log(domainArray);
     domainArray.shift();
@@ -155,7 +171,7 @@ function choropleth(props, colorScale){
 
 function setEnumerationUnits(countyData, map, path, colorScale){
 	//add counties to map
-	var regions = map.selectAll(".county")
+	var counties = map.selectAll(".county")
 		.data(countyData)
 		.enter()
 		.append("path")
@@ -230,7 +246,7 @@ function setChart(csvData, colorScale){
         .attr("x", 150)
         .attr("y", 30)
         .attr("class", "chartTitle")
-        .text("Number of" + " " + attrArray[1] + " in each County.");
+        .text("Number of" + " " + expressed + " in each County.");
 
     //create vertical axis generator
     var yAxis = d3.axisLeft()
@@ -280,11 +296,53 @@ function changeAttribute(attribute, csvData){
     expressed = attribute;
 
     //recreate the color scale
-    var colorScale = makeColorScale(csvData);
+    var colorScale = makeColorScaleNatural(csvData);
 
     //recolor enumeration units
-    var region = d3.selectAll(".county")
+    var counties = d3.selectAll(".county")
         .style("fill", function(d){
             return choropleth(d.properties, colorScale)
         });
+
+    var bars = d3.selectAll(".bar")
+        //re-sort bars
+        .sort(function(a, b){
+            return b[expressed] - a[expressed];
+        })
+        .attr("x", function(d, i){
+            return i * (chartInnerWidth / csvData.length) + leftPadding;
+        })
+        //resize bars
+        .attr("height", function(d, i){
+            return 463 - yScale(parseFloat(d[expressed]));
+        })
+        .attr("y", function(d, i){
+            return yScale(parseFloat(d[expressed])) + topBottomPadding;
+        })
+        //recolor bars
+        .style("fill", function(d){
+            return choropleth(d, colorScale);
+        });
+
+//function to position, size, and color bars in chart
+function updateChart(bars, n, colorScale){
+    //position bars
+    bars.attr("x", function(d, i){
+            return i * (chartInnerWidth / n) + leftPadding;
+        })
+        //size/resize bars
+        .attr("height", function(d, i){
+            return 463 - yScale(parseFloat(d[expressed]));
+        })
+        .attr("y", function(d, i){
+            return yScale(parseFloat(d[expressed])) + topBottomPadding;
+        })
+        //color/recolor bars
+        .style("fill", function(d){
+            return choropleth(d, colorScale);
+        });
+    
+    var chartTitle = d3.select(".chartTitle")
+        .text("Number of Variable " + expressed + " in each region");
+};
 };
