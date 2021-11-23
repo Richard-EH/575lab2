@@ -22,7 +22,7 @@ function setMap(){
         .center([-2.18, 32.69])
         .rotate([81, -13.64, 0])
         .parallels([29.5, 45.5])
-        .scale(1000.00)
+        .scale(5000.00)
         .translate([width/2, height/2]);
 
     var path = d3.geoPath()
@@ -30,9 +30,9 @@ function setMap(){
 
 	//use Promise.all to parallelize asynchronous data loading
 	var promises = [];
-	promises.push(d3.csv("/d3-lab/data/Local_Covid.csv")); //load attributes from csv
-	promises.push(d3.json("/d3-lab/data/VA_County_Amend.topojson")); //load choropleth spatial data
-	Promise.all(promises).then(callback);
+	    promises.push(d3.csv("/d3-lab/data/Local_Covid.csv")); //load attributes from csv
+	    promises.push(d3.json("/d3-lab/data/VA_County_Amend.topojson")); //load choropleth spatial data
+	    Promise.all(promises).then(callback);
     // Callback Function to run after the promise code block
     function callback(data){
         [csvData,countyData] = data;
@@ -52,6 +52,9 @@ function setMap(){
         
         //add coordinated visualization to the map
         setChart(csvData, colorScale);
+
+        //drop down menu
+        createDropdown(attrArray)
 
     }
 }; // End of setmap so far. 
@@ -152,7 +155,7 @@ function choropleth(props, colorScale){
 
 function setEnumerationUnits(countyData, map, path, colorScale){
 	//add counties to map
-	var regions = map.selectAll(".regions")
+	var regions = map.selectAll(".county")
 		.data(countyData)
 		.enter()
 		.append("path")
@@ -227,7 +230,7 @@ function setChart(csvData, colorScale){
         .attr("x", 150)
         .attr("y", 30)
         .attr("class", "chartTitle")
-        .text("Number of" + " " + expressed[0] + " in each County.");
+        .text("Number of" + " " + attrArray[1] + " in each County.");
 
     //create vertical axis generator
     var yAxis = d3.axisLeft()
@@ -246,4 +249,42 @@ function setChart(csvData, colorScale){
         .attr("height", chartInnerHeight)
         .attr("transform", translate);
 
+};
+//function to create a dropdown menu for attribute selection
+function createDropdown(csvData){
+    //add select element
+    var dropdown = d3.select("body")
+        .append("select")
+        .attr("class", "dropdown")
+        .on("change", function(){
+            changeAttribute(this.value, csvData)
+        });
+
+    //add initial option
+    var titleOption = dropdown.append("option")
+        .attr("class", "titleOption")
+        .attr("disabled", "true")
+        .text("Select Attribute");
+
+    //add attribute name options
+    var attrOptions = dropdown.selectAll("attrOptions")
+        .data(attrArray)
+        .enter()
+        .append("option")
+        .attr("value", function(d){ return d })
+        .text(function(d){ return d });
+};
+//dropdown change listener handler
+function changeAttribute(attribute, csvData){
+    //change the expressed attribute
+    expressed = attribute;
+
+    //recreate the color scale
+    var colorScale = makeColorScale(csvData);
+
+    //recolor enumeration units
+    var region = d3.selectAll(".county")
+        .style("fill", function(d){
+            return choropleth(d.properties, colorScale)
+        });
 };
