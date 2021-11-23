@@ -1,4 +1,7 @@
 
+//function operator that was to be here for when pulled to a local machine completely disabled all functions within the block so it
+//has been omitted at this time.
+
 //variables 
 var attrArray = ["Single_Family_Homes_Built", "Population", "Covid_Hospitalisations", "Covid_Death_Total", "Covid_Cases_Total"];
 var expressed = attrArray[0];
@@ -72,9 +75,6 @@ function setMap(){
         //drop down menu
         createDropdown(attrArray);
 
-        //updatechart
-        //updateChart(bars, n, colorScale);
-
 
 
     };
@@ -98,7 +98,7 @@ function setGraticule(map, path){
         .attr("class", "gratLines") //assign class for styling
         .attr("d", path); //project graticule lines
 };
-
+//joinData had keys edited so to work with my data.
 function joinData(countyData, csvData){
     for (var i=0; i<csvData.length; i++){
         var csvCovid = csvData[i]; //the current region
@@ -146,7 +146,7 @@ function makeColorScale(data){
         domainArray.push(val);
     };
 
-    //console.log(domainArray);
+    //DOMAIN ARRAY WILL NOT FUNCTION WHEN I ATTEMPT TO CHANGE ARRIBUTES.
 
     //cluster data using ckmeans clustering algorithm to create natural breaks
     var clusters = ss.ckmeans(domainArray, 5);
@@ -154,13 +154,13 @@ function makeColorScale(data){
     domainArray = clusters.map(function(d){
         return d3.min(d);
     });
-    //Same as below, code is correct via code examples provided however the array continues to return NaN
+    //code is correct via code examples provided however the array continues to return NaN
     console.log(domainArray);
     domainArray.shift();
 
-    //
+    //both console.logs were left open so I could attempt to find the error preventing my data from displaying correctly. 
     colorScale.domain(domainArray);
-	//console.log(domainArray);
+	console.log(domainArray);
 
     return colorScale;
 };
@@ -177,13 +177,13 @@ function choropleth(props, colorScale){
 
 
 function setEnumerationUnits(countyData, map, path, colorScale){
-	//add counties to map
+	//add counties to map I could not figure out what this would not load
 	var counties = map.selectAll(".counties")
 		.data(countyData)
 		.enter()
 		.append("path")
 		.attr("class", function(d){
-			return "regions " + d.properties.NAME;
+			return "counties" + d.properties.NAME;
 		})
 		.attr("d", path)
 		.style("fill", function(d){
@@ -192,16 +192,6 @@ function setEnumerationUnits(countyData, map, path, colorScale){
 };
 
 function setChart(csvData, colorScale){
-    //chart frame dimensions
-    var chartWidth = window.innerWidth * 0.425,
-        chartHeight = 473,
-        leftPadding = 25,
-        rightPadding = 2,
-        topBottomPadding = 5,
-        chartInnerWidth = chartWidth - leftPadding - rightPadding,
-        chartInnerHeight = chartHeight - topBottomPadding * 2,
-        translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
-
     //create a second svg element to hold the bar chart
     var chart = d3.select("body")
         .append("svg")
@@ -283,13 +273,13 @@ function createDropdown(csvData){
             changeAttribute(this.value, csvData)
         });
 
-    //add initial option
+    //Added Select option to menu
     var titleOption = dropdown.append("option")
         .attr("class", "titleOption")
         .attr("disabled", "true")
         .text("Select Attribute");
 
-    //add attribute name options
+    //Pull names from Attribute Array
     var attrOptions = dropdown.selectAll("attrOptions")
         .data(attrArray)
         .enter()
@@ -297,7 +287,7 @@ function createDropdown(csvData){
         .attr("value", function(d){ return d })
         .text(function(d){ return d });
 };
-//dropdown change listener handler
+//dropdown change handler, while this appeared to function the display of the page never seemed to change appropriately
 function changeAttribute(attribute, csvData){
     //change the expressed attribute
     expressed = attribute;
