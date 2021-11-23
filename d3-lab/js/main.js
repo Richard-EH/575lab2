@@ -314,7 +314,7 @@ function changeAttribute(attribute, csvData){
         });
 
     var bars = d3.selectAll(".bar")
-        //re-sort bars
+        //re-sort bars - I never could get this to function properly
         .sort(function(a, b){
             return b[expressed] - a[expressed];
         })
@@ -338,7 +338,7 @@ function changeAttribute(attribute, csvData){
             return choropleth(d, colorScale);
         });
     };
-//function to position, size, and color bars in chart
+//function to position, size, and color bars in chart- This also never functioned properly 
 function updateChart(bars,  csvData, colorScale){
     //position bars
     bars.attr("x", function(d, i){
@@ -360,40 +360,40 @@ function updateChart(bars,  csvData, colorScale){
         .text("Number of Variable " + expressed + " in each region");
 };
 
-//function to highlight enumeration units and bars
-function highlight(props){
-    //change stroke
-    var selected = d3.selectAll("." + props.FIPS)
-        .style("stroke", "blue")
-        .style("stroke-width", "2");
+//TOP OF CODE BLOCKS COMMENTED OUT AS I ATTEMPTED TO CORRECT BLOCKS ABOVE.
+// //function to highlight enumeration units and bars
+// function highlight(props){
+//     var selected = d3.selectAll("." + props.FIPS)
+//         .style("stroke", "blue")
+//         .style("stroke-width", "2");
     
-    setLabel(props);
-};
+//     setLabel(props);
+// };
 
-//function to reset the element style on mouseout
-function dehighlight(props){
-    var selected = d3.selectAll("." + props.FIPS)
-        .style("stroke", function(){
-            return getStyle(this, "stroke")
-        })
-        .style("stroke-width", function(){
-            return getStyle(this, "stroke-width")
-        });
+// //function to reset the element style on mouseout
+// function dehighlight(props){
+//     var selected = d3.selectAll("." + props.FIPS)
+//         .style("stroke", function(){
+//             return getStyle(this, "stroke")
+//         })
+//         .style("stroke-width", function(){
+//             return getStyle(this, "stroke-width")
+//         });
     
-    //below Example 2.4 line 21...remove info label
-    d3.select(".infolabel")
-        .remove();
+//     //below Example 2.4 line 21...remove info label
+//     d3.select(".infolabel")
+//         .remove();
 
-    function getStyle(element, styleName){
-        var styleText = d3.select(element)
-            .select("desc")
-            .text();
+//     function getStyle(element, styleName){
+//         var styleText = d3.select(element)
+//             .select("desc")
+//             .text();
 
-        var styleObject = JSON.parse(styleText);
+//         var styleObject = JSON.parse(styleText);
 
-        return styleObject[styleName];
-    };
-};
+//         return styleObject[styleName];
+//     };
+// };
 // ALL LABEL CODE BLOCK OUT UNTIL CHART CAN BE CORRECTED
 // //function to create dynamic label
 // function setLabel(props){
