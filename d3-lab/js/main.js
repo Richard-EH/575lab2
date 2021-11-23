@@ -104,7 +104,7 @@ function joinData(countyData, csvData){
                 //loop through geojson regions to find correct region
                 for (var a=0; a<countyData.length; a++){
 
-                    var geojsonProps = countyData[a].properties; //the current region geojson properties
+                    var geojsonProps = countyData[a].properties; //the current county geojson properties
                     var geojsonKey = geojsonProps.STCOFIPS; //the geojson primary key
         
                     //where primary keys match, transfer csv data to geojson properties object
