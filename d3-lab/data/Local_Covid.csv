@@ -1,4 +1,4 @@
-id,Locality,FIPS,Single_Family_Homes_Built,Population,Covid_Hospitalisations,Covid_Deaths_Total,Covid_Cases_Total
+id,Locality,FIPS,Single_Family_Homes_Built,Population,Covid_Hospitalisations,Covid_Death_Total,Covid_Cases_Total
 1,Frederick,51069,678,89790,357,150,11634
 2,Clarke,51043,78,14522,59,25,1362
 3,Loudoun,51107,1819,418690,1200,300,34240
