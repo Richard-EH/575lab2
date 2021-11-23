@@ -72,6 +72,8 @@ function setMap(){
         //drop down menu
         createDropdown(attrArray)
 
+
+
     }
 }; // End of setmap so far. 
 
@@ -211,7 +213,7 @@ function setChart(csvData, colorScale){
 
     //create a scale to size bars proportionally to frame
     var csvmax = d3.max(csvData, function(d) { return parseFloat(d[expressed]); });
-    console.log(csvmax);
+    //console.log(csvmax);
     var yScale = d3.scaleLinear()
         .range([chartHeight - 10, 0])
         .domain([0, csvmax + 20]);
@@ -225,7 +227,7 @@ function setChart(csvData, colorScale){
             return b[expressed]-a[expressed]
         })
         .attr("class", function(d){
-            return "bar " + d.adm1_code;
+            return "bar " + d.FIPS;
         })
         .attr("width", chartInnerWidth / csvData.length - 1)
         .attr("x", function(d, i){
@@ -351,7 +353,7 @@ function updateChart(bars, n, colorScale){
 //function to highlight enumeration units and bars
 function highlight(props){
     //change stroke
-    var selected = d3.selectAll("." + props.adm1_code)
+    var selected = d3.selectAll("." + props.FIPS)
         .style("stroke", "blue")
         .style("stroke-width", "2");
     
@@ -396,9 +398,9 @@ function setLabel(props){
         .attr("id", props.FIPS + "_label")
         .html(labelAttribute);
 
-    var regionName = infolabel.append("div")
+    var countyName = infolabel.append("div")
         .attr("class", "labelname")
-        .html(props.name);
+        .html(props.NAME);
 };
 
 //function to move info label with mouse
